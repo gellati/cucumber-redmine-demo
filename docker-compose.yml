@@ -1,0 +1,40 @@
+version: '2'
+
+# user/bitnami1
+services:
+#  robot:
+#    build:
+#      context: .
+#      dockerfile: robotubuntu.dev
+#    environment:
+#       - DISPLAY=localhost:0.0
+#    depends_on:
+#      - mariadb
+#      - redmine
+  redmine:
+    image: 'bitnami/redmine:latest'
+    ports:
+      - '80:3000'
+    volumes:
+      - 'redmine_data:/bitnami:z'
+    depends_on:
+      - mariadb
+  fix-mariadb-permissions:
+    image: 'bitnami/mariadb:latest'
+    user: root
+    command: chown -R 1001:1001 /bitnami
+    volumes:
+      - 'mariadb_data:/bitnami:z'
+  mariadb:
+    image: 'bitnami/mariadb:latest'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+      - 'mariadb_data:/bitnami:z'
+    depends_on:
+      - fix-mariadb-permissions
+volumes:
+  mariadb_data:
+    driver: local
+  redmine_data:
+    driver: local
