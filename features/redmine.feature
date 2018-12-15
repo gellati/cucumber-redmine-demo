@@ -1,10 +1,6 @@
-#*** Settings ***
-#Resource            keywords.robot
-#Test Teardown       Close Application
-#Test Setup          Go to Redmine
-#Documentation       A test suite for Redmine
 
 #*** Test Cases ***
+
 Feature: I can log into Redmine
 
 @ClickForgotPasswordLink

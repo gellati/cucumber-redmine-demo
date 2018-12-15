@@ -1,8 +1,11 @@
 # Cucumber demo on redmine
 
+
+This project uses Cucumber and Capybara to test the workings of a project management tool.
+
 ## Setup
 
-Initial requirements for this to work are Docker and Selenium webdriver installed on the computer. The project dependencies can be installed with [Bundler](https://bundler.io/). The dependencies are listed in the `Gemfile` and can be installed with
+Initial requirements for this to work are [Docker](https://www.docker.com/), [Ruby](https://www.ruby-lang.org/en/) and [Bundler](https://bundler.io/) installed on the computer. The project dependencies can be installed with [Bundler](https://bundler.io/). The dependencies are listed in the `Gemfile` and can be installed with
 
     bundler install
 
@@ -39,6 +42,32 @@ The user stories are marked with tags. To run only a specific user story, add th
 Cucumber can give an outline for new step definitions when new user stories are added. Write a scenario, which has no predefined step definitions (or has some steps that are already work in a desired way), and once the scenario is run, Cucumber will print out an outline that can be copied and pasted into the step definition file. The user then fills in the necessary content for the steps to be carried out.
 
 
+## Debugging tips
+
+If you want to print out the (html contents of the page)[https://www.stefanwille.com/2010/12/printing-the-page-content-in-capybara/], you can write this in the step definition
+
+    puts page.body
+
+You can also open a web browser with the content of the page with
+
+    save_and_open_page
+
+## Resources
+
+[Capybara tutorial](https://www.sitepoint.com/basics-capybara-improving-tests/)
+
+[Capybara at Github](https://github.com/teamcapybara/capybara)
+
+[Capybara documentation](https://www.rubydoc.info/github/jnicklas/capybara)
+
+[Capybara cheatsheet](https://devhints.io/capybara)
+
+[Another Capybara cheatsheet](https://kapeli.com/cheat_sheets/Capybara.docset/Contents/Resources/Documents/index)
+
+[Capybara cheatsheet 3](https://gist.github.com/zhengjia/428105)
+
+[Capybara examples](https://github.com/sferik/rails_admin/wiki/Rspec-with-capybara-examples)
+
 ## Todos
 - how to set preconditions needed for test?
-- use of variables in tests
+- headless testing

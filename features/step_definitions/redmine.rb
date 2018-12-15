@@ -1,41 +1,45 @@
 require "capybara/cucumber"
-require "capybara/rspec"
+
+HOST = 'http://localhost' # change url
+USERNAME = "user"
+PASSWORD = "bitnami1"
+
 
 Capybara.configure do |config|
   config.run_server = false
   config.default_driver = :selenium
-  config.app_host = 'http://localhost' # change url
+  config.app_host = HOST
 end
 
 
 ##  Locations
 
 Given(/^user is at Redmine$/) do
-  visit 'http://localhost'
+  visit HOST
 end
 
 Given(/^user is at the password restore page$/) do
-    visit 'http://localhost/account/lost_password'
-    expect(page.has_content?('Lost password'))
-    expect(page).to have_current_path('http://localhost/account/lost_password')
+  visit 'http://localhost/account/lost_password'
+  expect(page.has_content?('Lost password'))
+  expect(page).to have_current_path(HOST + '/account/lost_password')
 end
 
 
 ## Click links
 
 When(/^user clicks Redmine Sign in link$/) do
-   find('.login').click
+  find('.login').click
 end
 
 When(/^user clicks forgot password link$/) do
-    find('#login-form a.lost_password').click
+  find('#login-form a.lost_password').click
 end
 
 ## Redirections
 
 And(/^user is redirected to authentication$/) do
   expect(page.has_content?('Login'))
-  expect(page).to have_current_path('http://localhost/login')
+  expect(page).to have_current_path(HOST + '/login')
 end
 
 Then(/^user is directed into password restore page$/) do
@@ -49,12 +53,12 @@ end
 ## Fill in fields
 
 When(/^user fills in email field with "([^"]*)"$/) do |arg1|
-    find('input#mail').send_keys(arg1)
+  find('input#mail').send_keys(arg1)
 end
 
 When(/^user fills in valid username and valid password$/) do
-  find('#username').send_keys("user")
-  find('#password').send_keys("bitnami1")
+  find('#username').send_keys(USERNAME)
+  find('#password').send_keys(PASSWORD)
 end
 
 ## Click elements
