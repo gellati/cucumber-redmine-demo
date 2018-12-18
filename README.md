@@ -26,16 +26,23 @@ For security reasons, the permissions of the MariaDB container volumes need to b
 
 ## Run project
 
+User stories have, to use Cucumber terminology, been written as both scenarios and features. A feature contains one or more scenarios, and a scenario describes a number of steps a user can carry out to achieve a certain outcome.
+
 In order to run the tests, do
 
     bundle exec cucumber
 
-in the root folder.
+in the root folder. This will run all tests.
 
 The user stories are marked with tags. To run only a specific user story, add the `--tag` switch and and the name of the user story tag you want to run. Eg.
 
     bundle exec cucumber --tags @RestorePasswordWithUnknownEmail
 
+In order to run many user stories, separate the tags with a comma. E.g.
+
+    bundle exec cucumber --tags @RestorePasswordWithUnknownEmail,@ViewUserList
+
+Both scenarios and features have been tagged. It would be more consistent to mainly tag the scenarios so each can be run independently and test cases be more atomic. But since some scenarios are dependent on others and currently cannot be separated, they are lumped under a common feature.
 
 # Writing further tests
 
@@ -69,5 +76,5 @@ You can also open a web browser with the content of the page with
 [Capybara examples](https://github.com/sferik/rails_admin/wiki/Rspec-with-capybara-examples)
 
 ## Todos
-- how to set preconditions needed for test?
+- add teardown methods to tests once they are supported by Cucumber ([this](https://github.com/cucumber/cucumber-js/issues/914)
 - headless testing
