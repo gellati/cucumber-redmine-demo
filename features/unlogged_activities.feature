@@ -1,7 +1,7 @@
 
 #*** Test Cases ***
 
-Feature: I can log into Redmine
+Feature: I can interact with the site as an unlogged user
 
 @ClickForgotPasswordLink
 Scenario: As a user I can get to the password restore page
