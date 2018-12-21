@@ -1,7 +1,7 @@
 # Cucumber demo on redmine
 
 
-This project uses Cucumber and Capybara to test the workings of a project management tool.
+This project uses Cucumber and Capybara to test the workings of a project management tool. This is a companion project to another on [testing with Robot Framework](https://github.com/gellati/robot-framework-demo)
 
 ## Setup
 
@@ -44,6 +44,21 @@ In order to run many user stories, separate the tags with a comma. E.g.
 
 Both scenarios and features have been tagged. It would be more consistent to mainly tag the scenarios so each can be run independently and test cases be more atomic. But since some scenarios are dependent on others and currently cannot be separated, they are lumped under a common feature.
 
+List of implemented tests.
+
+| Tag | Level | Description |
+|---|---|---|
+|@CreateAndDeleteGroup | Feature | Create and delete groups |
+|@CreateAndDeleteUser | Feature | Create and delete users |
+|@ViewInstalledPlugins | Scenario | View installed plugins |
+|@ViewUserList | Scenario | View user list |
+|@ClickForgotPasswordLink | Scenario | Click link to reset forgotten password |
+|@RestorePasswordWithUnknownEmail | Scenario | Prevent usage of login with unknown email |
+|@LogIntoRedmine | Scenario | Log into Redmine |
+|@AddRemoveUserGroup | Feature | Add or remove users from group|
+
+
+
 # Writing further tests
 
 Cucumber can give an outline for new step definitions when new user stories are added. Write a scenario, which has no predefined step definitions (or has some steps that are already work in a desired way), and once the scenario is run, Cucumber will print out an outline that can be copied and pasted into the step definition file. The user then fills in the necessary content for the steps to be carried out.
@@ -77,4 +92,7 @@ You can also open a web browser with the content of the page with
 
 ## Todos
 - add teardown methods to tests once they are supported by Cucumber ([this](https://github.com/cucumber/cucumber-js/issues/914)
+- how to run background only once? before method?
 - headless testing
+- higher level steps
+- break up features into smaller?
