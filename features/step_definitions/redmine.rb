@@ -8,6 +8,7 @@ USER_PAGE = HOST + '/users'
 GROUPS_PAGE = HOST + '/groups'
 PLUGIN_PAGE = HOST + '/admin/plugins'
 NEW_GROUP_PAGE = HOST + '/groups/new'
+NEW_USER_PAGE = HOST + '/users/new'
 
 USER_PAGE_LOGIN='Login'
 USER_PAGE_FIRST_NAME='First name'
@@ -17,7 +18,15 @@ USER_PAGE_ADMINISTRATOR='Administrator'
 USER_PAGE_CREATED='Created'
 USER_PAGE_LAST_CONNECTION='Last connection'
 
-TEST_GROUP='Ticket reporters'
+TEST_GROUP = 'Ticket reporters'
+TEST_USER_LOGIN = 'Johnny'
+TEST_USER_FIRST_NAME = 'John'
+TEST_USER_LAST_NAME = 'Doe'
+TEST_USER_FULL_NAME = "John Doe"
+TEST_USER_EMAIL = 'john.doe@example.com'
+TEST_USER_PASSWORD = '123password'
+
+
 
 
 Capybara.configure do |config|
@@ -42,6 +51,7 @@ end
 Given(/^user is at user page$/) do
   visit USER_PAGE
   expect(page.has_content?('New user'))
+  expect(page.has_content?('Users'))
 end
 
 
@@ -69,9 +79,7 @@ When(/^user clicks users link$/) do
 end
 
 When(/^user clicks groups link$/) do
-  expect(page.has_content?('Groups'))
   find('.groups').click
-  expect(page.has_content?('New group'))
 end
 
 When(/^user clicks New group link$/) do
@@ -89,6 +97,9 @@ When(/^user clicks login button$/) do
   find('#login-submit').click
 end
 
+When(/^user clicks New user button$/) do
+  find('.icon-add').click
+end
 
 ## Redirections
 
@@ -116,6 +127,7 @@ end
 
 When(/^user is redirected to Groups page$/) do
   expect(page.has_content?('Groups'))
+  expect(page.has_content?('New group'))
   expect(page).to have_current_path(GROUPS_PAGE)
 end
 
@@ -127,6 +139,11 @@ end
 Then(/^user should be redirected to Groups page$/) do
   expect(page.has_content?('Groups'))
   expect(page).to have_current_path(GROUPS_PAGE)
+end
+
+When(/^user is redirected to New user page$/) do
+  expect(page.has_content?('New user'))
+  expect(page).to have_current_path(NEW_USER_PAGE)
 end
 
 
@@ -149,13 +166,12 @@ Then(/^page contains text that no valid login detail is found with given address
 end
 
 Then(/^user can see a valid user page$/) do
-  expect(page.has_content?('user'))
-  expect(page.has_content?('USER_PAGE_FIRST_NAME'))
-  expect(page.has_content?('USER_PAGE_LAST_NAME'))
-  expect(page.has_content?('USER_PAGE_EMAIL'))
-  expect(page.has_content?('USER_PAGE_ADMINISTRATOR'))
-  expect(page.has_content?('USER_PAGE_CREATED'))
-  expect(page.has_content?('USER_PAGE_LAST_CONNECTION'))
+  content = ['user', 'USER_PAGE_FIRST_NAME', 'USER_PAGE_LAST_NAME',
+             'USER_PAGE_EMAIL', 'USER_PAGE_ADMINISTRATOR', 'USER_PAGE_CREATED',
+             'USER_PAGE_LAST_CONNECTION']
+  content.each{|c|
+    expect(page.has_content?(c))
+  }
 end
 
 Then(/^page should contain the new group name$/) do
@@ -165,6 +181,24 @@ end
 Then(/^the Groups page should not contain the group$/) do
   expect(page.has_no_content?(TEST_GROUP))
 end
+
+Then(/^user can see a new user has been created$/) do
+  expect(page.has_content?(TEST_USER_LOGIN))
+end
+
+Then(/^users page should not contain the user$/) do
+  expect(page.has_no_content?(TEST_USER_LOGIN))
+end
+
+Then(/^group table contains the new user$/) do
+  expect(page.has_content?(TEST_USER_FULL_NAME))
+end
+
+Then(/^the group member page should not contain the user$/) do
+  expect(page.has_no_content?(TEST_USER_FULL_NAME))
+end
+
+
 
 
 ## Other
@@ -176,5 +210,45 @@ end
 
 When(/^user deletes a group from the Groups page$/) do
   find(:xpath, '//table//tr[*=\'' + TEST_GROUP + '\']//a[contains(text(), "Delete")]').click
+  page.accept_alert
+end
+
+When(/^user creates new user$/) do
+  dictionary = {'#user_login' => TEST_USER_LOGIN,
+                '#user_firstname' => TEST_USER_FIRST_NAME,
+                '#user_lastname' => TEST_USER_LAST_NAME,
+                '#user_mail' => TEST_USER_EMAIL,
+                '#user_password' => TEST_USER_PASSWORD,
+                '#user_password_confirmation' => TEST_USER_PASSWORD
+                }
+  dictionary.each do |key,value|
+    find(key).send_keys(value)
+  end
+  find('input[value="Create"]').click
+end
+
+When(/^user deletes a user from the users page$/) do
+  find('a.users').click
+  expect(page.has_content?('Users'))
+  expect(page.has_content?('New user'))
+  expect(page).to have_current_path(USER_PAGE)
+  find(:xpath, '//table//tr[ * = \'' + TEST_USER_LOGIN + '\']//td[@class="buttons"]//a[contains(text(), "Delete")]').click
+  page.accept_alert
+end
+
+When(/^user adds a new user to the group$/) do
+  find(:xpath, '//a[contains(text(), "' + TEST_GROUP + '")]').click
+  find(:xpath, '//a[@id="tab-users"]').click
+  find('.icon-add').click
+  expect(page).to have_xpath('//div[@id="ajax-modal"]')
+  find('#user_search').send_keys(TEST_USER_FULL_NAME)
+  find(:xpath, '//div[@id="principals"]//label[contains(text(), "'+ TEST_USER_FULL_NAME + '")]').click  #.set(true)
+  click_on('Add')
+end
+
+When(/^user deletes a user from the group$/) do
+  find(:xpath, '//a[contains(text(), "' + TEST_GROUP + '")]').click
+  find(:xpath, '//a[@id="tab-users"]').click
+  find(:xpath, '//table//tr[ * = "' + TEST_USER_FULL_NAME + '"]//td[@class="buttons"]//a[contains(text(), "Delete")]').click
   page.accept_alert
 end

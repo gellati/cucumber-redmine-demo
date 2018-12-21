@@ -1,6 +1,3 @@
-
-#*** Test Cases ***
-
 Feature: I can interact with the site as an unlogged user
 
 @ClickForgotPasswordLink
